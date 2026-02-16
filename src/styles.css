@@ -1,0 +1,225 @@
+:root {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #142033;
+  background: #f4f7fc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f4f7fc;
+}
+
+.app-shell {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(17, 34, 68, 0.08);
+}
+
+.hero-card h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.hero-card p {
+  margin: 0.45rem 0 0;
+  color: #4f5d77;
+}
+
+.file-upload {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  border: 2px dashed #9cb2d8;
+  border-radius: 14px;
+  font-weight: 700;
+}
+
+.file-upload input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  color: #2f3f5b;
+  font-size: 0.95rem;
+}
+
+input,
+select,
+button,
+.download-link {
+  border-radius: 12px;
+  border: 1px solid #cad7ee;
+  background: #fff;
+  font-size: 1rem;
+  padding: 0.72rem;
+}
+
+button {
+  font-weight: 650;
+}
+
+button:disabled {
+  opacity: 0.56;
+}
+
+.primary {
+  width: 100%;
+  border-color: #1d66ff;
+  background: #1d66ff;
+  color: #fff;
+}
+
+.controls-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.global-grid {
+  grid-template-columns: 1fr;
+}
+
+.clip-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.clip-card video {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  background: #111;
+}
+
+.clip-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.clip-header p {
+  margin: 0.2rem 0 0.75rem;
+  color: #5a6780;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.7rem;
+}
+
+.row.wrap {
+  flex-wrap: wrap;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.toggle input {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.button-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.button-row.wrap {
+  flex-wrap: wrap;
+}
+
+.button-row button {
+  min-width: 6.8rem;
+}
+
+.clip-grid {
+  grid-template-columns: 1fr;
+}
+
+.batch-actions h2 {
+  margin: 0 0 0.6rem;
+  font-size: 1.08rem;
+}
+
+.meta {
+  margin: 0.5rem 0 0;
+  color: #586784;
+  font-size: 0.9rem;
+}
+
+.warning {
+  margin: 0.6rem 0 0;
+  color: #a44f00;
+  font-weight: 650;
+}
+
+.error {
+  margin: 0.6rem 0 0;
+  color: #b42318;
+  font-weight: 700;
+}
+
+.progress-track {
+  margin-top: 0.6rem;
+  width: 100%;
+  height: 12px;
+  background: #e5edf9;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1d66ff, #3d86ff);
+  transition: width 0.2s ease;
+}
+
+.download-link {
+  display: inline-block;
+  margin-top: 0.8rem;
+  text-decoration: none;
+  color: #1349b4;
+  border-color: #b8d0ff;
+  background: #eaf2ff;
+  font-weight: 700;
+}
+
+.empty-state {
+  text-align: center;
+  color: #63728d;
+}
+
+@media (min-width: 760px) {
+  .global-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .clip-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
