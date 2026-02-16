@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { fetchFile, toBlobURL } from '@ffmpeg/util';
+import { fetchFile } from '@ffmpeg/util';
 
 type FitMode = 'cover' | 'contain';
 type AspectPresetKey = 'shorts' | 'landscape' | 'square';
@@ -90,7 +90,6 @@ function App() {
   const [fitMode, setFitMode] = useState<FitMode>('contain');
   const [isFfmpegLoading, setIsFfmpegLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-  const [isFfmpegReady, setIsFfmpegReady] = useState(false);
   const [currentStep, setCurrentStep] = useState('');
   const [exportProgress, setExportProgress] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
@@ -101,7 +100,6 @@ function App() {
   const ffmpegLoadedRef = useRef(false);
   const progressBaseRef = useRef(0);
   const progressWeightRef = useRef(0);
-  const coreAssetUrlsRef = useRef<{ coreURL: string; wasmURL: string; workerURL: string } | null>(null);
 
   const clipsRef = useRef<Clip[]>([]);
   const outputUrlRef = useRef('');
@@ -242,10 +240,6 @@ function App() {
   };
 
   const ensureFfmpeg = async (): Promise<FFmpeg> => {
-    if (typeof window === 'undefined') {
-      throw new Error('FFmpeg can only run in the browser.');
-    }
-
     if (!ffmpegRef.current) {
       ffmpegRef.current = new FFmpeg();
       ffmpegRef.current.on('progress', ({ progress }) => {
@@ -256,49 +250,21 @@ function App() {
 
     if (!ffmpegLoadedRef.current) {
       setIsFfmpegLoading(true);
-      setCurrentStep('Loading FFmpeg…');
 
       try {
-        if (!coreAssetUrlsRef.current) {
-          const coreURL = await toBlobURL(
-            'https://unpkg.com/@ffmpeg/core-st@0.12.6/dist/ffmpeg-core.js',
-            'text/javascript',
-          );
-          const wasmURL = await toBlobURL(
-            'https://unpkg.com/@ffmpeg/core-st@0.12.6/dist/ffmpeg-core.wasm',
-            'application/wasm',
-          );
-          const workerURL = await toBlobURL(
-            'https://unpkg.com/@ffmpeg/core-st@0.12.6/dist/ffmpeg-core.worker.js',
-            'text/javascript',
-          );
-          coreAssetUrlsRef.current = { coreURL, wasmURL, workerURL };
-        }
-
-        await ffmpegRef.current.load(coreAssetUrlsRef.current);
+        await ffmpegRef.current.load({
+          coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+          wasmURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm',
+        });
         ffmpegLoadedRef.current = true;
-        setIsFfmpegReady(true);
       } catch (error) {
-        const detail = error instanceof Error ? error.message : String(error);
-        throw new Error(`Failed to load FFmpeg: ${detail}`);
+        throw new Error(error instanceof Error ? `Failed to load FFmpeg: ${error.message}` : 'Failed to load FFmpeg.');
       } finally {
         setIsFfmpegLoading(false);
       }
     }
 
     return ffmpegRef.current;
-  };
-
-
-  const handleLoadFfmpeg = async () => {
-    setErrorMessage('');
-
-    try {
-      await ensureFfmpeg();
-      setCurrentStep('FFmpeg loaded. Ready to export.');
-    } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Failed to load FFmpeg.');
-    }
   };
 
   const handleExport = async () => {
@@ -627,10 +593,6 @@ function App() {
       </section>
 
       <section className="card export-card">
-        <button type="button" onClick={handleLoadFfmpeg} disabled={isFfmpegLoading || isFfmpegReady}>
-          {isFfmpegReady ? 'FFmpeg loaded' : isFfmpegLoading ? 'Loading FFmpeg…' : 'Load FFmpeg'}
-        </button>
-
         <button type="button" className="primary" onClick={handleExport} disabled={isFfmpegLoading || isExporting}>
           {isFfmpegLoading ? 'Loading FFmpeg…' : isExporting ? 'Exporting…' : 'Export stitched MP4'}
         </button>
